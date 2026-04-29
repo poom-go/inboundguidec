@@ -518,6 +518,9 @@
         <img src="./Primary Logo.png" alt="품고 로고" class="logo-img">
         <div class="logo-text"><strong>품고 입고 가이드</strong></div>
       </div>
+      <button class="download-btn" id="downloadGuidePdfBtn" type="button" style="width:100%; margin-bottom:12px;">
+        1~4번 PDF 저장
+      </button>
       <div class="nav-list" id="sideNavList"></div>
     </aside>
 
@@ -1339,6 +1342,365 @@
         return html;
       }
 
+      function buildPdfDetailBlock(item) {
+        if (!item) return "";
+
+        const imageHtml = item.image
+          ? `
+            <div class="pdf-image-wrap">
+              <img src="${item.image}" alt="${escapeHtml(item.title)}">
+            </div>
+          `
+          : "";
+
+        return `
+          <div class="pdf-detail-card">
+            <h4>${escapeHtml(item.title)}</h4>
+            <div class="pdf-detail-desc">
+              ${renderDetailContent(item.desc)}
+            </div>
+            ${imageHtml}
+          </div>
+        `;
+      }
+
+      function buildGuidePdfHtml() {
+        const centerHtml = document.querySelector("#panel-center")?.innerHTML || "";
+
+        const packagingHtml = Object.keys(packagingDetailMap)
+          .map(key => buildPdfDetailBlock(packagingDetailMap[key]))
+          .join("");
+
+        const barcodeHtml = Object.keys(barcodeDetailMap)
+          .map(key => buildPdfDetailBlock(barcodeDetailMap[key]))
+          .join("");
+
+        const bookingNoticeHtml = `
+          <div class="pdf-two-col">
+            <div class="pdf-detail-card">
+              <h4>${escapeHtml(bookingDetailMap.delivery.title)}</h4>
+              ${renderBookingContent(bookingDetailMap.delivery)}
+            </div>
+            <div class="pdf-detail-card">
+              <h4>${escapeHtml(bookingDetailMap.truck.title)}</h4>
+              ${renderBookingContent(bookingDetailMap.truck)}
+            </div>
+          </div>
+        `;
+
+        return `
+          <!DOCTYPE html>
+          <html lang="ko">
+          <head>
+            <meta charset="UTF-8">
+            <title>품고 초도 입고 가이드 PDF</title>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+            <style>
+              * { box-sizing: border-box; }
+              body {
+                margin: 0;
+                padding: 28px;
+                font-family: Pretendard, sans-serif;
+                color: #111827;
+                word-break: keep-all;
+                background: #ffffff;
+                line-height: 1.6;
+              }
+
+              .pdf-cover {
+                border: 1px solid #dbe7ff;
+                border-radius: 24px;
+                padding: 28px;
+                margin-bottom: 24px;
+                background: #f8fbff;
+              }
+
+              .pdf-cover h1 {
+                margin: 0 0 8px;
+                font-size: 30px;
+                line-height: 1.3;
+                color: #0040d1;
+                letter-spacing: -0.03em;
+              }
+
+              .pdf-cover p {
+                margin: 0;
+                color: #5b6472;
+                font-size: 14px;
+                line-height: 1.7;
+              }
+
+              .pdf-section {
+                margin-bottom: 28px;
+                page-break-before: always;
+              }
+
+              .pdf-section:first-of-type {
+                page-break-before: auto;
+              }
+
+              .pdf-section h2 {
+                margin: 0 0 16px;
+                font-size: 24px;
+                line-height: 1.35;
+                border-bottom: 2px solid #0040d1;
+                padding-bottom: 10px;
+                letter-spacing: -0.02em;
+              }
+
+              .pdf-detail-card {
+                border: 1px solid #e7edf7;
+                border-radius: 18px;
+                padding: 18px 20px;
+                margin-bottom: 18px;
+                break-inside: avoid;
+                page-break-inside: avoid;
+                background: #ffffff;
+              }
+
+              .pdf-detail-card h4 {
+                margin: 0 0 12px;
+                font-size: 17px;
+                line-height: 1.5;
+                color: #111827;
+              }
+
+              .pdf-detail-desc {
+                color: #374151;
+                font-size: 14px;
+                line-height: 1.8;
+              }
+
+              .pdf-image-wrap {
+                margin-top: 14px;
+                border: 1px solid #e7edf7;
+                border-radius: 14px;
+                overflow: hidden;
+                background: #ffffff;
+              }
+
+              .pdf-image-wrap img {
+                display: block;
+                width: 100%;
+                height: auto;
+              }
+
+              .pdf-two-col {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 16px;
+                align-items: start;
+              }
+
+              table {
+                width: 100%;
+                border-collapse: collapse;
+              }
+
+              th, td {
+                border: 1px solid #e8ebf0;
+                padding: 10px;
+                font-size: 13px;
+                line-height: 1.6;
+                vertical-align: top;
+              }
+
+              th {
+                background: #f8f9fa;
+                font-weight: 800;
+              }
+
+              .badge, .chip, button, .download-btn, .upload-trigger-btn {
+                display: none !important;
+              }
+
+              .center-info-layout {
+                display: grid;
+                grid-template-columns: 1.1fr .9fr;
+                gap: 20px;
+                align-items: start;
+              }
+
+              img {
+                max-width: 100%;
+              }
+
+              .booking-layout {
+                display: grid;
+                gap: 10px;
+              }
+
+              .booking-row {
+                border: 1px solid #e7edf7;
+                border-radius: 14px;
+                background: #ffffff;
+                padding: 12px 14px;
+                break-inside: avoid;
+                page-break-inside: avoid;
+              }
+
+              .booking-headline {
+                display: flex;
+                align-items: flex-start;
+                gap: 8px;
+              }
+
+              .booking-text {
+                flex: 1;
+                color: #1f2937;
+                font-size: 14px;
+                line-height: 1.7;
+              }
+
+              .booking-sub {
+                margin-top: 8px;
+                padding-left: 10px;
+                border-left: 2px solid #dbe7ff;
+                color: #6b7280;
+                font-size: 13px;
+                line-height: 1.7;
+              }
+
+              .booking-tags, .guide-tags {
+                display: inline-flex;
+                flex-wrap: wrap;
+                gap: 5px;
+                flex: 0 0 auto;
+              }
+
+              .tag {
+                display: inline-flex;
+                align-items: center;
+                min-height: 22px;
+                padding: 2px 8px;
+                border-radius: 999px;
+                font-size: 11px;
+                font-weight: 800;
+                white-space: nowrap;
+              }
+
+              .tag.required { background: #eef4ff; color: #0040d1; }
+              .tag.warning { background: #fff4e8; color: #b95d00; }
+              .tag.danger { background: #fff1f0; color: #d92d20; }
+              .tag.cost { background: #fff7ed; color: #c2410c; }
+
+              .booking-highlight {
+                border: 1px solid #ffd8ae;
+                background: #fff8f1;
+                border-radius: 16px;
+                padding: 14px;
+                margin-bottom: 12px;
+                break-inside: avoid;
+                page-break-inside: avoid;
+              }
+
+              .booking-highlight-title {
+                font-size: 15px;
+                font-weight: 900;
+                color: #9a4d00;
+                line-height: 1.5;
+                margin-bottom: 10px;
+              }
+
+              .booking-highlight-copy {
+                display: grid;
+                gap: 8px;
+              }
+
+              .booking-highlight-item {
+                background: #ffffff;
+                border: 1px solid #ffe4c7;
+                border-radius: 12px;
+                padding: 10px 12px;
+              }
+
+              .booking-highlight-item strong {
+                display: block;
+                margin-bottom: 4px;
+                font-size: 13px;
+                color: #7c3f00;
+                line-height: 1.6;
+              }
+
+              .booking-highlight-item span {
+                display: block;
+                font-size: 13px;
+                color: #4b5563;
+                line-height: 1.7;
+              }
+
+              @media print {
+                body {
+                  padding: 14mm;
+                }
+
+                .pdf-section {
+                  page-break-before: always;
+                }
+
+                .pdf-section:first-of-type {
+                  page-break-before: auto;
+                }
+
+                .pdf-detail-card,
+                .booking-row,
+                .booking-highlight {
+                  break-inside: avoid;
+                  page-break-inside: avoid;
+                }
+              }
+            </style>
+          </head>
+          <body>
+            <div class="pdf-cover">
+              <h1>품고 초도 입고 가이드</h1>
+              <p>센터 정보, 포장 기준, 바코드 기준, 입고 예약 유의사항만 포함된 PDF 출력용 문서입니다.</p>
+            </div>
+
+            <section class="pdf-section">
+              <h2>1. 센터 정보</h2>
+              ${centerHtml}
+            </section>
+
+            <section class="pdf-section">
+              <h2>2. 포장 기준</h2>
+              ${packagingHtml}
+            </section>
+
+            <section class="pdf-section">
+              <h2>3. 바코드 기준</h2>
+              ${barcodeHtml}
+            </section>
+
+            <section class="pdf-section">
+              <h2>4. 입고 예약 유의사항</h2>
+              ${bookingNoticeHtml}
+            </section>
+          </body>
+          </html>
+        `;
+      }
+
+      function openGuidePdfPrint() {
+        const printWindow = window.open("", "_blank");
+
+        if (!printWindow) {
+          alert("팝업이 차단되어 PDF 출력창을 열 수 없습니다. 브라우저 팝업 허용 후 다시 시도해주세요.");
+          return;
+        }
+
+        printWindow.document.open();
+        printWindow.document.write(buildGuidePdfHtml());
+        printWindow.document.close();
+
+        printWindow.onload = () => {
+          printWindow.focus();
+          setTimeout(() => {
+            printWindow.print();
+          }, 700);
+        };
+      }
+
       function setModalImage(imgEl, fallbackEl, src, alt) {
         imgEl.style.display = "block";
         fallbackEl.classList.remove("show");
@@ -2010,6 +2372,11 @@ function generateTruckPalletLabelPdf(groups) {
 
       renderNav(sideNavList);
       renderNav(mobileNavList);
+
+      const downloadGuidePdfBtn = document.getElementById("downloadGuidePdfBtn");
+      if (downloadGuidePdfBtn) {
+        downloadGuidePdfBtn.addEventListener("click", openGuidePdfPrint);
+      }
 
       if (mobileMenuOpen) mobileMenuOpen.addEventListener("click", openDrawer);
       if (mobileMenuClose) mobileMenuClose.addEventListener("click", closeDrawer);
