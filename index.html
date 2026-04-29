@@ -376,6 +376,85 @@
     .faq-item.open .faq-answer{display:block}
     .faq-item.open .faq-question{background:#f8fbff}
 
+      .guide-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.guide-alert {
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 18px;
+  padding: 18px 20px;
+}
+
+.guide-alert-title {
+  font-size: 17px;
+  font-weight: 900;
+  color: #9a4d00;
+  margin-bottom: 10px;
+}
+
+.guide-alert ul {
+  margin: 0;
+  padding-left: 20px;
+  color: #374151;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.guide-list {
+  display: grid;
+  gap: 12px;
+}
+
+.guide-card {
+  border: 1px solid #e7edf7;
+  border-radius: 18px;
+  background: #fff;
+  padding: 18px 20px;
+}
+
+.guide-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.guide-title {
+  font-size: 15px;
+  font-weight: 900;
+  color: #111827;
+  line-height: 1.65;
+}
+
+.guide-desc {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 2px solid #dbe7ff;
+  color: #4b5563;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.guide-desc strong {
+  color: #111827;
+  font-weight: 900;
+}
+
+.guide-divider {
+  margin: 10px 0 2px;
+  padding: 12px 14px;
+  border-radius: 14px;
+  background: #f8fbff;
+  border: 1px solid #dbe7ff;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 900;
+}
+
     @media (max-width:1100px){.center-info-layout{grid-template-columns:1fr !important}}
     @media (max-width:980px){.booking-grid{grid-template-columns:1fr}}
     @media (max-width:900px){
@@ -672,252 +751,245 @@
 
 <script>
   const bookingDetailMap = {
-    parcelNotice: {
-      title: "택배 입고 유의사항",
-      html: `
-        <div class="booking-highlight">
-          <div class="booking-highlight-head">
-            <div class="booking-highlight-title">⏰ 입고 예약 기준</div>
-            <span class="tag required">필수 확인</span>
-          </div>
-          <div class="booking-highlight-copy">
-            <div class="booking-highlight-item">
-              <strong>입고 예약 기한</strong>
-              <span>D-1 12시 이전까지 예약 가능합니다.</span>
-            </div>
-            <div class="booking-highlight-item">
-              <strong>D-1 12시 이후 취소/변경 시</strong>
-              <span>패널티가 청구됩니다.</span>
-            </div>
-            <div class="booking-highlight-item">
-              <strong>입고 당일 취소/변경 시</strong>
-              <span>패널티가 청구됩니다.</span>
-            </div>
-          </div>
+  parcelNotice: {
+    title: "택배 입고 유의사항",
+    html: `
+      <div class="guide-section">
+        <div class="guide-alert">
+          <div class="guide-alert-title">⏰ 입고 예약 기준</div>
+          <ul>
+            <li><strong>입고 예약 기한</strong> : 입고 예정일 기준 D-1 12시 이전까지 예약 가능합니다.</li>
+            <li><strong>D-1 12시 이후 취소/변경 시</strong> : 예약 변경 패널티가 청구됩니다.</li>
+            <li><strong>입고 당일 취소/변경 시</strong> : 예약 변경 패널티가 청구됩니다.</li>
+          </ul>
         </div>
 
-        <div class="booking-layout">
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags">
-                  <span class="tag required">필수 준수</span>
-                  <span class="tag cost">추가 비용</span>
-                </div>
-                <div class="booking-text">1개의 BOX에는 1개의 SKU로만 구성되어야 합니다.</div>
-              </div>
-              <div class="booking-sub">
-                다수의 SKU가 1개의 BOX에 함께 입고될 경우 혼적 입고로 처리되어 혼적 분리 비용이 발생합니다. <strong>pcs당 100원</strong>
-              </div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">입고 요청서를 출력하여 각 박스마다 동봉 후 입고되어야 합니다.</div>
-              </div>
-              <div class="booking-sub">입고 요청서는 품고 시스템 내에서 출력할 수 있습니다.</div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag cost">추가 비용</span></div>
-                <div class="booking-text">택배 박스 1개당 박스 하차 비용이 청구됩니다.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">택배 입고 예약 시 송장번호를 반드시 입력해야 합니다.</div>
-              </div>
-              <div class="booking-sub">송장번호 발번 전 예약한 경우에는 입고 전 송장번호를 품고에 반드시 전달해주세요.</div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag warning">참고</span></div>
-                <div class="booking-text">일부 송장이 도착하지 않을 경우, 모든 택배 도착 후 일괄 검수가 진행됩니다.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">파손 우려가 있는 상품(SKU)은 반드시 내부 완충 포장을 해주셔야 합니다.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      `
-    },
-
-    truckNotice: {
-      title: "차량 입고 유의사항",
-      html: `
-        <div class="booking-highlight">
-          <div class="booking-highlight-head">
-            <div class="booking-highlight-title">⏰ 입고 예약 기준</div>
-            <span class="tag required">필수 확인</span>
-          </div>
-          <div class="booking-highlight-copy">
-            <div class="booking-highlight-item">
-              <strong>입고 예약 기한</strong>
-              <span>D-1 12시 이전까지 예약 가능합니다.</span>
-            </div>
-            <div class="booking-highlight-item">
-              <strong>D-1 12시 이후 취소/변경 시</strong>
-              <span>패널티가 청구됩니다.</span>
-            </div>
-            <div class="booking-highlight-item">
-              <strong>입고 당일 취소/변경 시</strong>
-              <span>패널티가 청구됩니다.</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="booking-layout">
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">모든 팔레트에는 입고 요청서가 부착되어 있어야 합니다.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">잔량 박스가 있을 경우, 팔레트 최상단 적재가 필요합니다.</div>
-              </div>
-              <div class="booking-sub">육안으로 박스 외부에 잔량 박스 표기가 되어 있어야 합니다.</div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">팔레트 적재 시 교대열 또는 벽돌형 적재로 입고해주세요.</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">잔량 팔레트로 입고하는 경우, 최상단 겉면을 비워 입고해주세요.</div>
-              </div>
-              <div class="booking-sub">
-                예시: 완 PLT 박스 수량 72박스 → 71박스 입고 시 최상단 중앙 비움이 아닌 겉면 비움으로 적재해야 하며, 최상단 비움 적재로 입고 시 외관상 박스 수량 오인이 발생할 수 있습니다.
-              </div>
-            </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags">
-                  <span class="tag required">필수 준수</span>
-                  <span class="tag danger">입고 불가</span>
-                </div>
-                <div class="booking-text">팔레트 이동전표는 기사님을 통해 품고로 전달되어야 하며, 이동 전표 미발행 시 입고 불가합니다.</div>
-              </div>
-              <div class="booking-sub">KPP - 266569 / AJ - P262612-9</div>
-            </div>
-          </div>
-
-          <div class="booking-highlight" style="margin-top:12px;">
-            <div class="booking-highlight-head">
-              <div class="booking-highlight-title">💸 추가 비용 발생 기준</div>
+        <div class="guide-list">
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
               <span class="tag cost">추가 비용</span>
             </div>
-          </div>
-
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag cost">추가 비용</span></div>
-                <div class="booking-text">팔레트 포함 높이 160cm 초과 시 박스당 이적 추가 비용이 발생합니다.</div>
-              </div>
+            <div class="guide-title">1개의 BOX에는 1개의 상품(SKU)만 구성해 주세요.</div>
+            <div class="guide-desc">
+              여러 상품(SKU)이 1개의 BOX에 함께 입고될 경우 혼적 입고로 처리됩니다.
+              이 경우 현장에서 상품(SKU)별 분리 작업이 필요하므로 혼적 분리 비용이 발생합니다.
+              <strong>혼적 분리 비용은 pcs당 100원입니다.</strong>
             </div>
           </div>
 
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag cost">추가 비용</span></div>
-                <div class="booking-text">표준 팔레트가 아닌 나무 또는 일회용 팔레트 입고 시 표준 팔레트 이적이 진행됩니다.</div>
-              </div>
-              <div class="booking-sub">이 경우 팔레트당 추가 비용이 발생합니다.</div>
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">입고 요청서를 출력하여 각 박스마다 동봉 후 입고해 주세요.</div>
+            <div class="guide-desc">
+              입고 요청서는 품고 시스템 내에서 출력할 수 있습니다.
+              박스별 입고 요청서가 동봉되어 있어야 현장에서 입고 예약 정보와 실제 입고 상품을 정확히 확인할 수 있습니다.
             </div>
           </div>
 
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag cost">추가 비용</span></div>
-                <div class="booking-text">팔레트 미적재 상태로 차량 입고 시 박스당 추가 비용이 발생합니다.</div>
-              </div>
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag cost">추가 비용</span>
+            </div>
+            <div class="guide-title">택배 박스 1개당 박스 하차 비용이 청구됩니다.</div>
+            <div class="guide-desc">
+              택배 입고는 센터 도착 후 박스 단위로 하차 및 입고 검수 작업이 진행됩니다.
+              이에 따라 택배 박스 수량 기준으로 박스 하차 비용이 발생합니다.
             </div>
           </div>
 
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag cost">추가 비용</span></div>
-                <div class="booking-text">팔레트 내 SKU 혼적으로 입고될 경우 SKU 분리 작업 비용이 발생합니다.</div>
-              </div>
-              <div class="booking-sub">혼적 팔레트 입고 시 패킹리스트를 사전에 공유해주셔야 합니다.</div>
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">택배 입고 예약 시 송장번호를 반드시 입력해 주세요.</div>
+            <div class="guide-desc">
+              송장번호가 입력되어 있어야 센터 도착 여부 및 입고 대상 택배를 확인할 수 있습니다.
+              송장번호 발번 전 예약한 경우에는 입고 전 송장번호를 품고에 반드시 전달해 주세요.
             </div>
           </div>
 
-          <div class="booking-row">
-            <div class="booking-main">
-              <div class="booking-headline">
-                <div class="booking-tags"><span class="tag required">필수 준수</span></div>
-                <div class="booking-text">상품(SKU) 파손 방지를 위해 팔레트 랩핑은 단단하게 작업 후 입고해주세요.</div>
-              </div>
-              <div class="booking-sub">파손품이 발견될 경우 입고 수량에서 제외되며, 요청에 따라 반출 또는 폐기로 진행합니다.</div>
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag warning">참고</span>
+            </div>
+            <div class="guide-title">일부 송장이 도착하지 않을 경우, 모든 택배 도착 후 일괄 검수가 진행됩니다.</div>
+            <div class="guide-desc">
+              동일 입고 예약 건에 여러 송장이 포함되어 있는 경우, 일부 택배만 먼저 도착하더라도 전체 택배가 도착한 이후 검수가 진행될 수 있습니다.
+              입고 지연을 방지하기 위해 모든 박스가 동일 일정에 도착할 수 있도록 발송해 주세요.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">파손 우려가 있는 상품(SKU)은 반드시 내부 완충 포장을 해 주세요.</div>
+            <div class="guide-desc">
+              유리, 도자기, 액체류, 눌림에 취약한 상품 등 파손 가능성이 있는 상품은 내부 완충재를 사용하여 안전하게 포장해 주세요.
+              입고 중 파손품이 확인될 경우 정상 입고 수량에서 제외될 수 있습니다.
             </div>
           </div>
         </div>
-      `
-    },
+      </div>
+    `
+  },
 
-    parcelBooking: {
-      title: "입고 예약 방법",
-      html: `<p>입고 예약 방법은 이미지 준비 후 추가될 예정입니다.</p>`
-    },
+  truckNotice: {
+    title: "차량 입고 유의사항",
+    html: `
+      <div class="guide-section">
+        <div class="guide-alert">
+          <div class="guide-alert-title">⏰ 입고 예약 기준</div>
+          <ul>
+            <li><strong>입고 예약 기한</strong> : 입고 예정일 기준 D-1 12시 이전까지 예약 가능합니다.</li>
+            <li><strong>D-1 12시 이후 취소/변경 시</strong> : 예약 변경 패널티가 청구됩니다.</li>
+            <li><strong>입고 당일 취소/변경 시</strong> : 예약 변경 패널티가 청구됩니다.</li>
+          </ul>
+        </div>
 
-    parcelPrint: {
-      title: "입고 내역 출력 방법",
-      html: `<p>입고 내역 출력 방법은 이미지 준비 후 추가될 예정입니다.</p>`
-    },
+        <div class="guide-list">
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">모든 팔레트에는 입고 요청서가 부착되어 있어야 합니다.</div>
+            <div class="guide-desc">
+              팔레트별 입고 요청서가 부착되어 있어야 현장에서 입고 예약 정보와 실제 입고 상품을 확인할 수 있습니다.
+              입고 요청서가 누락될 경우 확인 작업이 지연될 수 있습니다.
+            </div>
+          </div>
 
-    truckBooking: {
-      title: "입고 예약 방법",
-      html: `<p>입고 예약 방법은 이미지 준비 후 추가될 예정입니다.</p>`
-    },
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">잔량 박스가 있을 경우, 팔레트 최상단에 적재해 주세요.</div>
+            <div class="guide-desc">
+              완박스가 아닌 잔량 박스는 현장에서 바로 확인할 수 있도록 팔레트 최상단에 적재해 주세요.
+              또한 육안으로 확인 가능하도록 박스 외부에 잔량 박스 표기가 되어 있어야 합니다.
+            </div>
+          </div>
 
-    truckPrint: {
-      title: "입고 내역 출력 방법",
-      html: `<p>입고 내역 출력 방법은 이미지 준비 후 추가될 예정입니다.</p>`
-    }
-  };
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">팔레트 적재 시 교대열 또는 벽돌형 적재로 입고해 주세요.</div>
+            <div class="guide-desc">
+              이동 및 하차 과정에서 박스가 무너지지 않도록 안정적인 형태로 적재해 주세요.
+              불안정한 적재 상태로 입고될 경우 하차 및 입고 작업이 지연될 수 있습니다.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">잔량 팔레트로 입고하는 경우, 최상단 겉면을 비워 입고해 주세요.</div>
+            <div class="guide-desc">
+              예시: 완 PLT 박스 수량이 72박스인 경우 71박스 입고 시, 최상단 중앙을 비우는 방식이 아닌 겉면을 비우는 방식으로 적재해야 합니다.
+              최상단 중앙 비움 형태로 입고될 경우 외관상 박스 수량 오인이 발생할 수 있습니다.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+              <span class="tag danger">입고 불가</span>
+            </div>
+            <div class="guide-title">팔레트 이동전표는 기사님을 통해 품고로 전달되어야 합니다.</div>
+            <div class="guide-desc">
+              이동전표가 발행되지 않은 경우 팔레트 입고가 불가합니다.
+              차량 입고 전 이동전표 발행 여부를 반드시 확인해 주세요.
+              <br><strong>KPP - 266569 / AJ - P262612-9</strong>
+            </div>
+          </div>
+
+          <div class="guide-divider">💸 추가 비용 발생 기준</div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag cost">추가 비용</span>
+            </div>
+            <div class="guide-title">팔레트 포함 높이 160cm 초과 시 박스당 이적 추가 비용이 발생합니다.</div>
+            <div class="guide-desc">
+              팔레트 적재 높이가 기준을 초과하는 경우, 센터 보관 및 이동 기준에 맞춰 이적 작업이 필요할 수 있습니다.
+              이 경우 박스 단위로 추가 비용이 발생합니다.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag cost">추가 비용</span>
+            </div>
+            <div class="guide-title">표준 팔레트가 아닌 나무 또는 일회용 팔레트 입고 시 추가 비용이 발생합니다.</div>
+            <div class="guide-desc">
+              표준 팔레트가 아닌 팔레트로 입고될 경우 센터 운영 기준에 맞춰 표준 팔레트로 이적 작업이 진행됩니다.
+              이 경우 팔레트당 추가 비용이 발생합니다.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag cost">추가 비용</span>
+            </div>
+            <div class="guide-title">팔레트 미적재 상태로 차량 입고 시 박스당 추가 비용이 발생합니다.</div>
+            <div class="guide-desc">
+              차량 입고는 팔레트 적재 상태를 기준으로 하차 및 입고 작업이 진행됩니다.
+              박스가 팔레트에 적재되지 않은 상태로 입고될 경우 현장에서 별도 적재 작업이 필요하므로 추가 비용이 발생합니다.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag cost">추가 비용</span>
+            </div>
+            <div class="guide-title">팔레트 내 SKU 혼적으로 입고될 경우 SKU 분리 작업 비용이 발생합니다.</div>
+            <div class="guide-desc">
+              1개 팔레트에는 1개의 상품(SKU) 적재를 권장합니다.
+              다수 SKU가 1개 팔레트에 혼적되어 입고될 경우 현장에서 SKU별 분리 작업이 필요하며, 분리 작업 비용이 발생합니다.
+              혼적 팔레트 입고가 불가피한 경우 패킹리스트를 사전에 공유해 주세요.
+            </div>
+          </div>
+
+          <div class="guide-card">
+            <div class="guide-tags">
+              <span class="tag required">필수 준수</span>
+            </div>
+            <div class="guide-title">상품(SKU) 파손 방지를 위해 팔레트 랩핑은 단단하게 작업 후 입고해 주세요.</div>
+            <div class="guide-desc">
+              차량 이동 및 하차 중 상품이 흔들리거나 무너지지 않도록 팔레트 랩핑을 단단하게 진행해 주세요.
+              파손품이 발견될 경우 입고 수량에서 제외되며, 요청에 따라 반출 또는 폐기로 진행됩니다.
+            </div>
+          </div>
+        </div>
+      </div>
+    `
+  },
+
+  parcelBooking: {
+    title: "입고 예약 방법",
+    html: `<p>입고 예약 방법은 이미지 준비 후 추가될 예정입니다.</p>`
+  },
+
+  parcelPrint: {
+    title: "입고 내역 출력 방법",
+    html: `<p>입고 내역 출력 방법은 이미지 준비 후 추가될 예정입니다.</p>`
+  },
+
+  truckBooking: {
+    title: "입고 예약 방법",
+    html: `<p>입고 예약 방법은 이미지 준비 후 추가될 예정입니다.</p>`
+  },
+
+  truckPrint: {
+    title: "입고 내역 출력 방법",
+    html: `<p>입고 내역 출력 방법은 이미지 준비 후 추가될 예정입니다.</p>`
+  }
+};
 
   const bookingModal = document.getElementById("bookingModal");
   const bookingModalBackdrop = document.getElementById("bookingModalBackdrop");
