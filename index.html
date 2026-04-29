@@ -1445,8 +1445,8 @@
               .pdf-detail-card {
                 border: 1px solid #e7edf7;
                 border-radius: 18px;
-                padding: 18px 20px;
-                margin-bottom: 18px;
+                padding: 14px 16px;
+                margin-bottom: 14px;
                 break-inside: avoid;
                 page-break-inside: avoid;
                 background: #ffffff;
@@ -1477,7 +1477,7 @@
                 display: block;
                 width: auto;
                 max-width: 100%;
-                max-height: 260px;
+                max-height: 180px;
                 height: auto;
                 margin: 0 auto;
                 object-fit: contain;
@@ -1524,9 +1524,9 @@
               }
 
               .center-info-layout img {
-                max-height: 240px !important;
+                max-height: 210px !important;
                 width: 100% !important;
-                object-fit: cover !important;
+                object-fit: contain !important;
               }
 
               .booking-layout {
@@ -1725,49 +1725,93 @@
           doc.write(buildGuidePdfHtml());
           doc.close();
 
-          await new Promise(resolve => setTimeout(resolve, 600));
+          await new Promise(resolve => setTimeout(resolve, 700));
           await waitForPdfImages(doc);
-          await new Promise(resolve => setTimeout(resolve, 400));
-
-          const canvas = await html2canvas(doc.body, {
-            scale: 2,
-            useCORS: true,
-            allowTaint: true,
-            backgroundColor: "#ffffff",
-            windowWidth: 900,
-            scrollX: 0,
-            scrollY: 0
-          });
+          await new Promise(resolve => setTimeout(resolve, 500));
 
           const { jsPDF } = window.jspdf;
           const pdf = new jsPDF("p", "mm", "a4");
+
           const pageWidth = 210;
           const pageHeight = 297;
-          const margin = 8;
+          const margin = 10;
           const printableWidth = pageWidth - margin * 2;
-          const pageCanvasHeight = Math.floor((pageHeight - margin * 2) * canvas.width / printableWidth);
+          const printableHeight = pageHeight - margin * 2;
+          const gap = 5;
+          let currentY = margin;
+          let pageHasContent = false;
 
-          let renderedHeight = 0;
-          let pageIndex = 0;
+          function addNewPage() {
+            pdf.addPage();
+            currentY = margin;
+            pageHasContent = false;
+          }
 
-          while (renderedHeight < canvas.height) {
-            const sliceHeight = Math.min(pageCanvasHeight, canvas.height - renderedHeight);
-            const pageCanvas = document.createElement("canvas");
-            pageCanvas.width = canvas.width;
-            pageCanvas.height = sliceHeight;
-            const ctx = pageCanvas.getContext("2d");
+          async function elementToCanvas(el) {
+            return await html2canvas(el, {
+              scale: 2,
+              useCORS: true,
+              allowTaint: true,
+              backgroundColor: "#ffffff",
+              windowWidth: 900,
+              scrollX: 0,
+              scrollY: 0
+            });
+          }
 
-            ctx.fillStyle = "#ffffff";
-            ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
-            ctx.drawImage(canvas, 0, renderedHeight, canvas.width, sliceHeight, 0, 0, canvas.width, sliceHeight);
+          function addCanvasAsImage(canvas, forceNewPage = false) {
+            if (!canvas || !canvas.width || !canvas.height) return;
 
-            if (pageIndex > 0) pdf.addPage();
-            const pageImgData = pageCanvas.toDataURL("image/jpeg", 0.92);
-            const pageImgHeight = sliceHeight * printableWidth / canvas.width;
-            pdf.addImage(pageImgData, "JPEG", margin, margin, printableWidth, pageImgHeight);
+            let imgWidth = printableWidth;
+            let imgHeight = canvas.height * imgWidth / canvas.width;
 
-            renderedHeight += sliceHeight;
-            pageIndex += 1;
+            // 카드/이미지가 페이지 중간에서 잘리지 않도록, 한 요소가 너무 길 때만 한 페이지 안에 축소합니다.
+            if (imgHeight > printableHeight) {
+              const scaleToFit = printableHeight / imgHeight;
+              imgWidth = imgWidth * scaleToFit;
+              imgHeight = printableHeight;
+            }
+
+            if ((forceNewPage || currentY + imgHeight > pageHeight - margin) && pageHasContent) {
+              addNewPage();
+            }
+
+            const x = margin + (printableWidth - imgWidth) / 2;
+            const imgData = canvas.toDataURL("image/jpeg", 0.92);
+            pdf.addImage(imgData, "JPEG", x, currentY, imgWidth, imgHeight);
+            currentY += imgHeight + gap;
+            pageHasContent = true;
+          }
+
+          async function addElement(el, forceNewPage = false) {
+            const canvas = await elementToCanvas(el);
+            addCanvasAsImage(canvas, forceNewPage);
+          }
+
+          const cover = doc.querySelector(".pdf-cover");
+          if (cover) await addElement(cover, false);
+
+          const sections = Array.from(doc.querySelectorAll(".pdf-section"));
+
+          for (const section of sections) {
+            const title = section.querySelector("h2");
+            if (title) await addElement(title, true);
+
+            if (section.querySelector(".center-info-layout")) {
+              const centerContent = section.querySelector(".center-info-layout") || section;
+              await addElement(centerContent, false);
+              continue;
+            }
+
+            const cards = Array.from(section.querySelectorAll(":scope > .pdf-detail-card, :scope .pdf-two-col > .pdf-detail-card"));
+            if (cards.length) {
+              for (const card of cards) {
+                await addElement(card, false);
+              }
+              continue;
+            }
+
+            await addElement(section, false);
           }
 
           pdf.save("품고_초도_입고_가이드.pdf");
